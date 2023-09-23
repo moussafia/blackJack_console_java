@@ -48,9 +48,15 @@ public class blackJack {
         return extraire_ieme_carte(card,randomIndex);
     }
 
-    public static int[][] melanger_jeu_cartes(int[][] card){
+    public static int[][] melanger_jeu_cartes(int[][] card,int[][] cardsMixed){
         int[][][] cardsTrier=tirer_une_carte(card);
-       int[][] cardsMixed=cardsTrier[0];
+        int[][] cardsMixed1=cardsMixed;
+        if(cardsMixed1.length>0){
+            cardsMixed1[cardsMixed.length-1]=cardsTrier[0][0];
+        }else{
+            cardsMixed1=cardsTrier[0];
+        }
+
         int[][] cardsNoneMixed=new int[card.length-1][2];
         int k=0;
         for(int i=0;i<cardsNoneMixed.length;i++){
@@ -60,6 +66,6 @@ public class blackJack {
         if(cardsTrier[1].length == 0){
             return cardsMixed;
         }
-        return melanger_jeu_cartes(cardsNoneMixed);
+        return melanger_jeu_cartes(cardsNoneMixed,cardsMixed1);
     }
 }
