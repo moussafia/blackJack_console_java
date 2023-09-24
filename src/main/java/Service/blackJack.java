@@ -1,27 +1,33 @@
+package Service;
+
+import module.Text;
+
+import java.util.Scanner;
+
 public class blackJack {
     public static final int maxCardsType=4;
     public static final int maxCardsValue=13;
 
-    //method une : recursivite
-    public static int[][] listCards(int cardsValue, int cardsType,int[][] card){
-        if(cardsValue == maxCardsValue && cardsType == maxCardsType){
+    public static int[][] listCards(int cardsValue, int cardsType,int[][] card) {
+        int[][] arr = new int[card.length + 1][2];
+        System.arraycopy(card,0,arr,0,card.length);
+        arr[card.length-1][0] = cardsValue;
+        arr[card.length-1][1] = cardsType;
+        if (cardsValue == maxCardsValue && cardsType == maxCardsType) {
             return card;
         }
-       if(cardsValue == maxCardsValue){
-           cardsValue = 1;
-           cardsType++;
-       }else{
-           cardsValue++;
-       }
-
-       int[][]  arr = new int[card.length+1][2];
-       for(int i = 0;i < card.length;i++){
-           arr[i][0] = card[i][0];
-           arr[i][1] = card[i][1];
-       }
-        arr[card.length][0] = cardsValue;
-        arr[card.length][1] = cardsType;
+        if (cardsValue == maxCardsValue) {
+            cardsValue = 1;
+            cardsType++;
+        }else{
+            cardsValue++;
+        }
         return listCards(cardsValue, cardsType, arr);
+    }
+
+    public static int[][] createCards(){
+        int[][] card = new int[1][2];
+        return blackJack.listCards(1, 1, card);
     }
 
     public static int[][][] extraire_ieme_carte(int [][]cards,int indice){
@@ -44,7 +50,6 @@ public class blackJack {
     public static int[][][] tirer_une_carte(int[][] card){
         int lengthCards=card.length;
         int randomIndex=(int)Math.floor(Math.random()*(lengthCards));
-        System.out.println(randomIndex);
         return extraire_ieme_carte(card,randomIndex);
     }
 
@@ -68,13 +73,21 @@ public class blackJack {
         }
         return melanger_jeu_cartes(cardsNoneMixed,cardsMixednNEW);
     }
+
+    /**
+     *
+     * @param cards
+     * @param indice
+     * @return [cards split,cards of remaining]
+     */
     public static int[][][] piocher_n_cartes(int [][]cards, int indice){
         int lengthOfCardsPioche=cards.length-indice;
         int[][] cardsPioche=new int[lengthOfCardsPioche][];
-        int[][] cardsRemining=new int[indice][];
+        int[][] cardsRemaining=new int[indice][];
         System.arraycopy(cards, indice, cardsPioche,0, lengthOfCardsPioche);
-        System.arraycopy(cards,0, cardsRemining,0, indice);
-        int[][][] listCards={cardsPioche,cardsRemining};
+        System.arraycopy(cards,0, cardsRemaining,0, indice);
+        int[][][] listCards={cardsPioche,cardsRemaining};
         return  listCards;
     }
+
 }
