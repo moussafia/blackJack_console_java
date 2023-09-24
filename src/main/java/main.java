@@ -6,6 +6,7 @@ public class main {
         int[][] arr = blackJack.listCards(1, 1, card);
         int[][] arrM =  new int[0][2];
         int[][]    arrM1=blackJack.melanger_jeu_cartes(arr,arrM);
+        int[][][] h=blackJack.piocher_n_cartes(arrM1,13);
         System.out.println("fefedf");
     }
     }

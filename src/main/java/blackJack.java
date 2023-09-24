@@ -49,23 +49,32 @@ public class blackJack {
     }
 
     public static int[][] melanger_jeu_cartes(int[][] card,int[][] cardsMixed){
-        int[][][] cardsTrier=tirer_une_carte(card);
-        int[][] cardsMixed1=cardsMixed;
-        if(cardsMixed1.length>0){
-            cardsMixed1[cardsMixed.length-1]=cardsTrier[0][0];
-        }else{
-            cardsMixed1=cardsTrier[0];
-        }
-
-        int[][] cardsNoneMixed=new int[card.length-1][2];
-        int k=0;
-        for(int i=0;i<cardsNoneMixed.length;i++){
-                cardsNoneMixed[i]=cardsTrier[1][k];
-                k++;
-        }
+        int[][][] cardsTrier = tirer_une_carte(card);
         if(cardsTrier[1].length == 0){
             return cardsMixed;
         }
-        return melanger_jeu_cartes(cardsNoneMixed,cardsMixed1);
+        int rowLength=cardsMixed.length+1;
+        int[][] cardsMixednNEW = new int[rowLength][];
+        if(cardsMixednNEW.length > 1){
+            System.arraycopy(cardsMixed,0,cardsMixednNEW,0,cardsMixed.length);
+            System.arraycopy(cardsTrier[0],0, cardsMixednNEW, cardsMixed.length,1);
+        }else{
+            cardsMixednNEW = cardsTrier[0];
+        }
+        int[][] cardsNoneMixed = new int[card.length-1][2];
+        int k=0;
+        for(int i=0;i<cardsNoneMixed.length;i++){
+            cardsNoneMixed[i] = cardsTrier[1][k++];
+        }
+        return melanger_jeu_cartes(cardsNoneMixed,cardsMixednNEW);
+    }
+    public static int[][][] piocher_n_cartes(int [][]cards, int indice){
+        int lengthOfCardsPioche=cards.length-indice;
+        int[][] cardsPioche=new int[lengthOfCardsPioche][];
+        int[][] cardsRemining=new int[indice][];
+        System.arraycopy(cards, indice, cardsPioche,0, lengthOfCardsPioche);
+        System.arraycopy(cards,0, cardsRemining,0, indice);
+        int[][][] listCards={cardsPioche,cardsRemining};
+        return  listCards;
     }
 }
