@@ -1,10 +1,9 @@
-import Service.Game;
-import Service.blackJack;
-import module.Cards;
+import Service.GameBlackJack;
+import Service.gameInterface;
 
 public class main {
     public static void main(String[] args) {
-        Game.blackJackGame();
+        gameInterface.gameInterface();
     }
     }
 

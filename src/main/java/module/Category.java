@@ -14,10 +14,4 @@ public enum Category {
     public char getSymbol(){
         return symbol;
     }
-    public static Category getCategoryByIndex(int index){
-        if(index>=0 && index<=values().length){
-            return values()[index-1];
-        }
-        throw new IllegalArgumentException("invalid index");
-    }
 }
