@@ -89,20 +89,20 @@ public class BlackJack {
     public static int score(int [][]array){
 
         int resultat = 0;
+        int numberAce =0;
 
         for(int i = 0; i < array.length; i++){
-
-            if( array[i][0] > 1 && array[i][0] < 11 ){
-                resultat += array[i][0];
-
-            }else{
-                resultat += ((array[i][0] > 10) ? 10 : (array[i][0]==1 && (resultat + 11) > 21) ? 1 : 11);
-
+            if(array[i][0] == 1){
+                numberAce++;
             }
-
-
+            resultat += array[i][0] > 10 ? 10 : 0;
+            resultat += array[i][0] > 1 && array[i][0] < 11 ? array[i][0] : 0;
         }
-
+        if((resultat + numberAce + 10) <= 21 && numberAce !=0){
+            resultat += resultat + numberAce + 10;
+        }else if((resultat + numberAce + 10) > 21 && numberAce !=0){
+            resultat += numberAce;
+        }
         return resultat;
 
     }
@@ -122,16 +122,6 @@ public class BlackJack {
         int [][][]cardsList = {cardsGamer, cardsSplitRemining};
         return cardsList;
     }
-//    public static int[][][] hitPlayer(int score,int [][]cardsSplit,int[][] cardsPlayer,int condition){
-//        int[][][] ListCardsOfPlaying;
-//        if(score < condition){
-//            ListCardsOfPlaying = hit(cardsSplit,cardsPlayer);
-//        }else{
-//           ListCardsOfPlaying = new int[][][]{null , cardsSplit, cardsPlayer};
-//        }
-//        return ListCardsOfPlaying;
-//
-//    }
     public static boolean split(int[][] cardsPlayer){
         return cardsPlayer[0][0] == cardsPlayer[1][0];
     }
@@ -153,6 +143,24 @@ public class BlackJack {
         }
         return null;
 
+    }
+
+    public static void displayWinner(int[][] playerData){
+        int[][] winner = new int[3][2];
+        int minDiff=21;
+        for(int i = 0;i < playerData.length; i++){
+            int dif = 21 - playerData[i][1];
+            if( dif == 0){
+                winner[i][1] = 1;
+                continue;
+            }
+            if (dif > 0){
+                if(minDiff > dif){
+                    minDiff = dif;
+                }
+            }
+
+        }
     }
 
 }
