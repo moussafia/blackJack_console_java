@@ -99,7 +99,7 @@ public class BlackJack {
             resultat += array[i][0] > 1 && array[i][0] < 11 ? array[i][0] : 0;
         }
         if((resultat + numberAce + 10) <= 21 && numberAce !=0){
-            resultat += resultat + numberAce + 10;
+            resultat += numberAce + 10;
         }else if((resultat + numberAce + 10) > 21 && numberAce !=0){
             resultat += numberAce;
         }
@@ -136,31 +136,54 @@ public class BlackJack {
         if(score == 21){
            int cardValueRemoved = cardsPlayer[1][0];
            int cardTypeRemoved = cardsPlayer[1][1];
-            cardsPlayer[1][0] = 0;
-            cardsPlayer[1][1] = 0;
-            int[][][] ListCards = {{{cardValueRemoved, cardTypeRemoved}}, cardsPlayer};
+           int[][] newCardsPlayer = {{cardsPlayer[0][0], cardsPlayer[0][0]}};
+            int[][][] ListCards = {{{cardValueRemoved, cardTypeRemoved}}, newCardsPlayer};
             return ListCards;
         }
         return null;
 
     }
 
-    public static void displayWinner(int[][] playerData){
-        int[][] winner = new int[3][2];
-        int minDiff=21;
-        for(int i = 0;i < playerData.length; i++){
+    /***
+     *
+     * @param playerData
+     * @return [[player Index but don't use Index equal 0 ,Player is Winner if value == 1 else if value == 0]]
+     */
+
+    public static int[][] displayWinner(int[][] playerData){
+        int[][] winner;
+        if(playerData.length == 3){
+            winner = new int[3][2];
+        }else {
+            winner = new int[2][2];
+        }
+        int countBlackJack = 0;
+        for(int i = 0; i < playerData.length; i++){
+            winner[i][0] = playerData[i][0];
+        }
+        for(int i = 0; i < playerData.length; i++){
             int dif = 21 - playerData[i][1];
             if( dif == 0){
                 winner[i][1] = 1;
-                continue;
+                countBlackJack++;
             }
-            if (dif > 0){
-                if(minDiff > dif){
+        }
+        if(countBlackJack == 0){
+            int minDiff = 21;
+            for(int i = 0, k = 0; i < playerData.length; i++){
+                int dif = 21 - playerData[i][1];
+                if( dif < minDiff && dif > 0){
                     minDiff = dif;
                 }
             }
-
+            for(int i = 0; i < playerData.length; i++){
+                int dif = 21 - playerData[i][1];
+                if( dif == minDiff){
+                   winner[i][1] = 1;
+                }
+            }
         }
+        return winner;
     }
 
 }
