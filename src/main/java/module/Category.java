@@ -1,10 +1,10 @@
 package module;
 
 public enum Category {
-    HART('1'),
-    DIAMONDS('2'),
-    CLUBS('3'),
-    SPADES('4');
+    HART('\u2764'),
+    DIAMONDS('\u2666'),
+    CLUBS('\u2663'),
+    SPADES('\u2660');
 
     public final char symbol;
 

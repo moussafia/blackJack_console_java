@@ -4,7 +4,7 @@ import module.Text;
 
 import java.util.Scanner;
 
-public class gameInterface {
+public class GameInterface {
     public static void gameInterface(){
         Scanner scanner=new Scanner(System.in);
         System.out.println( Text.RED+"Welcome to Blackjack!"+Text.RESET);
@@ -18,7 +18,7 @@ public class gameInterface {
         System.out.println("7)-If you and the dealer have the same total, it's a tie.");
         System.out.println("");
         System.out.println(Text.GREEN+"if you wanna play please press ok"+Text.RESET);
-        String responsePlayer=new String();
+        String responsePlayer;
         responsePlayer=scanner.nextLine();
         while(!responsePlayer.toLowerCase().equals("ok")){
             System.out.println(Text.GREEN+"if you wanna play please press ok"+Text.RESET);

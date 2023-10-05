@@ -45,6 +45,7 @@ public class GameBlackJack {
      */
     public static int[][][] splitCards(int[][] cardsPlayer, int[][] cardsDealer, int[][] cardsRemaining){
         int[][][] collections={cardsPlayer, cardsDealer, cardsRemaining};
+        displayCardsAndScore(cardsPlayer, "Player" ,true, false, true);
         if(BlackJack.split(cardsPlayer)){
             System.out.println("do you wanna Split");
             System.out.println("press ok/no :   if you want/don't want");
@@ -68,25 +69,21 @@ public class GameBlackJack {
                 int[][][] collectionCards={cardsPlayer1, cardsPlayer2, cardsDealer, cardsRemain};
                 return collectionCards;
             }
-            displayCardsAndScore(cardsPlayer, "Player" ,true, false, false);
             return collections;
         }
-        displayCardsAndScore(cardsPlayer, "Player" ,true, false , false);
         return collections;
     }
     public static void displayCardsAndScore(int[][] cardsPlayer, String namePlayer, boolean isPlayer, boolean hide, boolean isInitialGame){
+        for(int i = 0; i < cardsPlayer.length; i++){
+                Cards.Cards(cardsPlayer[i][0], cardsPlayer[i][1], (hide && i == 1) ? true: false );
+        }
         int score=BlackJack.score(cardsPlayer);
         int scoreDealer=0;
         if(isInitialGame){
             scoreDealer = cardsPlayer[0][0] > 10 ? 10 : cardsPlayer[0][0];
             scoreDealer = scoreDealer == 1 ? 11 : scoreDealer;
         }
-        System.out.println(namePlayer + ": "+ (isPlayer ? score : scoreDealer + "+?" ));
-        for(int i = 0; i < cardsPlayer.length; i++){
-                Cards.Cards(cardsPlayer[i][0], cardsPlayer[i][1], (hide && i == 1) ? true: false );
-        }
-
-
+        System.out.println(Text.BLUE + namePlayer + ": "+ (isPlayer ? score : scoreDealer + "+?" ) + Text.RESET);
     }
 
     public static int[][][] hitPlayer(int [][]cardsPlayer, int[][] cardsRemaining,String namePlayer,boolean isPlayer,int condition, boolean initialHeat){
@@ -97,19 +94,25 @@ public class GameBlackJack {
             displayCardsAndScore(cardsPlayer, namePlayer, isPlayer, false, false);
         }
         String responsePlayer = new String();
-        if(scorePlayer < condition){
+        if(scorePlayer < condition  && condition == 21){
             System.out.println("h: Hit     s: stand");
             responsePlayer=scanner.nextLine().toLowerCase().trim();
         }
-        while (responsePlayer.equals("h") && scorePlayer < condition){
+        boolean conditionHit = scorePlayer < condition;
+        if(condition == 21){
+            conditionHit = conditionHit && responsePlayer.equals("h");
+        }
+        while (conditionHit){
             collections = BlackJack.hit(cardsRemaining, cardsPlayer);
             cardsPlayer = collections[0];
             displayCardsAndScore(cardsPlayer, namePlayer, isPlayer, false, false);
             cardsRemaining = collections[1];
             scorePlayer=BlackJack.score(cardsPlayer);
-            if(scorePlayer < condition){
+            conditionHit = scorePlayer < condition;
+            if(scorePlayer < condition && condition == 21){
                 System.out.println("h: Hit     s: stand");
                 responsePlayer=scanner.nextLine().toLowerCase().trim();
+                conditionHit = conditionHit && responsePlayer.equals("h");
             }
         }
         int [][][]collectionInfo = {{{scorePlayer}},cardsPlayer,cardsRemaining};
@@ -123,7 +126,7 @@ public class GameBlackJack {
          for(int i = 0; i < dataWinner.length; i++){
              if(dataWinner[i][1] == 1){
                  int indexNameWinner = dataWinner[i][0];
-                 System.out.println(Text.GREEN + namePlayers[indexNameWinner] + Text.RESET);
+                 System.out.println(Text.GREEN + namePlayers[indexNameWinner] + " score: " + dataPlayers[indexNameWinner][1] + Text.RESET);
                  NumberWinners ++;
              }
          }
@@ -133,6 +136,7 @@ public class GameBlackJack {
     }
 
     public static int[][][] assuranceBlackJack(int [][]cardsDealer){
+        displayCardsAndScore(cardsDealer, "Dealer" ,false, true, true);
         System.out.println("do you wanna do assurance press ok or no");
         Scanner scanner = new Scanner(System.in);
         String responsePlayer = scanner.nextLine().toLowerCase();
@@ -141,6 +145,7 @@ public class GameBlackJack {
             responsePlayer = scanner.nextLine();
         }
         if(responsePlayer.equals("ok")){
+            displayCardsAndScore(cardsDealer, "Dealer" ,true, false, true);
             int score=BlackJack.score(cardsDealer);
             int[][][] NewCardsDealer = BlackJack.assurance(score, cardsDealer);
                 return NewCardsDealer;
@@ -174,7 +179,7 @@ public class GameBlackJack {
             int scorePlayer = hitPlayer[0][0][0];
             int[][] cardsDealer = collections[1];
             int[][][] NewCardsDealer =assuranceBlackJack(cardsDealer);
-            int[][][] hitDealer = new int[0][][];
+            int[][][] hitDealer;
             if(NewCardsDealer == null){
                 hitDealer = hitPlayer(cardsDealer, cardsRemaining, "dealer", true, 17, false);
             }else {

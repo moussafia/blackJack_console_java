@@ -14,9 +14,7 @@ public class Cards {
                 "┌─────────┐",
                 String.format("│ %s       │", hide ? "?" : valueC),
                 "│         │",
-                "│         │",
                 String.format("│    %s    │", hide ? "?" : symbol),
-                "│         │",
                 "│         │",
                 String.format("│       %s │", hide ? "?" : valueC),
                 "└─────────┘"

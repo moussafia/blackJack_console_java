@@ -137,8 +137,8 @@ public class BlackJack {
            int cardValueRemoved = cardsPlayer[1][0];
            int cardTypeRemoved = cardsPlayer[1][1];
            int[][] newCardsPlayer = {{cardsPlayer[0][0], cardsPlayer[0][0]}};
-            int[][][] ListCards = {{{cardValueRemoved, cardTypeRemoved}}, newCardsPlayer};
-            return ListCards;
+            int[][][] listCards = {{{cardValueRemoved, cardTypeRemoved}}, newCardsPlayer};
+            return listCards;
         }
         return null;
 
