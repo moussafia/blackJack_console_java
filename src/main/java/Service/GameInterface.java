@@ -26,5 +26,13 @@ public class GameInterface {
         }
         System.out.println("");
         GameBlackJack.blackJackGame();
+        System.out.println("do you wanna play again oui/no");
+        String responponsePlayingAgain = scanner.nextLine().toLowerCase().trim();
+        while (responponsePlayingAgain.equals("oui")){
+            GameBlackJack.blackJackGame();
+            System.out.println("do you wanna play again oui/no");
+            responponsePlayingAgain = scanner.nextLine().toLowerCase().trim();
+        }
+        System.out.println(Text.RED + "good BY" + Text.RESET);
     }
 }

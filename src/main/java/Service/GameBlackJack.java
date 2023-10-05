@@ -34,6 +34,7 @@ public class GameBlackJack {
         int[][] cardsRemaining = new int[cardsForPlaying.length - 4][];
         System.arraycopy(cardsForPlaying, 0, cardsRemaining, 0, cardsForPlaying.length-4);
         displayCardsAndScore(cardsDealer, "Dealer" ,false, true, true);
+//        cardsPlayer = new int[][]{{3, 2}, {3, 4}};
         return splitCards(cardsPlayer, cardsDealer, cardsRemaining);
     }
 
@@ -60,8 +61,8 @@ public class GameBlackJack {
                 int[][] cardsPlayer2 = new int[2][];
                 cardsPlayer1[0] = cardsPlayer[0];
                 cardsPlayer2[0] = cardsPlayer[1];
-                cardsPlayer1[1] = cardsPlayer[cardsPlayer.length - 1];
-                cardsPlayer2[1] = cardsPlayer[cardsPlayer.length - 2];
+                cardsPlayer1[1] = cardsRemaining[cardsPlayer.length - 1];
+                cardsPlayer2[1] = cardsRemaining[cardsPlayer.length - 2];
                 displayCardsAndScore(cardsPlayer1, "Player one" ,true, false, false);
                 displayCardsAndScore(cardsPlayer2, "Player two" ,true, false, false);
                 int[][] cardsRemain = new int[cardsRemaining.length - 2][];
@@ -95,7 +96,7 @@ public class GameBlackJack {
         }
         String responsePlayer = new String();
         if(scorePlayer < condition  && condition == 21){
-            System.out.println("h: Hit     s: stand");
+            System.out.println("h: Hit     s: stand  for " + Text.ORANGE + namePlayer + Text.RESET);
             responsePlayer=scanner.nextLine().toLowerCase().trim();
         }
         boolean conditionHit = scorePlayer < condition;
@@ -153,43 +154,62 @@ public class GameBlackJack {
         return null;
     }
 
-    public static void blackJackGame(){
-        int[][][] cardsSplit = CardsSplit();
-        int[][] cardsForPlaying = cardsSplit[0];
-        int[][][] collections = initialGame(cardsForPlaying);
-        if(collections.length == 4){
-            int[][] cardsPlayer1 = collections[0];
-            int[][] cardsRemaining = collections[3];
-            int[][][] hitPlayerOne = hitPlayer(cardsPlayer1, cardsRemaining, "Player One", true, 21, true);
-            int scorePlayerOne = hitPlayerOne[0][0][0];
-            int[][] cardsPlayer2 = collections[1];
-            int[][][] hitPlayerTwo = hitPlayer(cardsPlayer2, cardsRemaining, "Player Two", true, 21, false);
-            int scorePlayerTwo = hitPlayerTwo[0][0][0];
-            int[][] cardsDealer = collections[2];
+    public static void hitPlayerSplited(int[][] cardsPlayerOne, int[][] cardsPlayerTwo, int[][] cardsDealers, int[][] cardsRemain){
+        int[][] cardsPlayer1 = cardsPlayerOne;
+        int[][] cardsRemaining = cardsRemain;
+        int[][][] hitPlayerOne = hitPlayer(cardsPlayer1, cardsRemaining, "Player One", true, 21, true);
+        cardsRemaining = hitPlayerOne[2];
+        int scorePlayerOne = hitPlayerOne[0][0][0];
+        int[][] cardsPlayer2 = cardsPlayerTwo;
+        int[][][] hitPlayerTwo = hitPlayer(cardsPlayer2, cardsRemaining, "Player Two", true, 21, false);
+        int scorePlayerTwo = hitPlayerTwo[0][0][0];
+        int[][] cardsDealer = cardsDealers;
+        cardsRemaining = hitPlayerTwo[2];
+        int scoreDealer = BlackJack.score(cardsDealers);
+        if(scorePlayerOne != 21 && scorePlayerTwo != 21){
             int[][][] hitDealer = hitPlayer(cardsDealer, cardsRemaining, "dealer", true, 17, false);
-            int scoreDealer = hitDealer[0][0][0];
-            String[] namePlayer = {"Player One", "Player Two", "dealer"};
-            int[][] DataPlayers={{0, scorePlayerOne},{1, scorePlayerTwo},{2, scoreDealer}};
-            displayWinner(namePlayer, DataPlayers);
+            scoreDealer = hitDealer[0][0][0];
         }
-        else {
-            int[][] cardsPlayer1 = collections[0];
-            int[][] cardsRemaining = collections[2];
-            int[][][] hitPlayer = hitPlayer(cardsPlayer1, cardsRemaining, "Player", true, 21, true);
-            int scorePlayer = hitPlayer[0][0][0];
-            int[][] cardsDealer = collections[1];
+        String[] namePlayer = {"Player One", "Player Two", "dealer"};
+        int[][] DataPlayers={{0, scorePlayerOne},{1, scorePlayerTwo},{2, scoreDealer}};
+        displayWinner(namePlayer, DataPlayers);
+    }
+    public static void hitPlayerNoneSplited(int[][] cardsPlayer, int[][] cardsDealers, int[][] cardsRemain){
+        int[][] cardsPlayer1 = cardsPlayer;
+        int[][] cardsRemaining = cardsRemain;
+        int[][][] hitPlayer = hitPlayer(cardsPlayer1, cardsRemaining, "Player", true, 21, true);
+        int scorePlayer = hitPlayer[0][0][0];
+        cardsRemaining = hitPlayer[2];
+        int[][] cardsDealer = cardsDealers;
+        int scoreDealer = BlackJack.score(cardsDealer);
+        if(scorePlayer !=21){
             int[][][] NewCardsDealer =assuranceBlackJack(cardsDealer);
             int[][][] hitDealer;
             if(NewCardsDealer == null){
                 hitDealer = hitPlayer(cardsDealer, cardsRemaining, "dealer", true, 17, false);
             }else {
                 hitDealer = hitPlayer(NewCardsDealer[1], cardsRemaining, "dealer", true, 17, false);
+                System.out.println();
             }
-            int scoreDealer = hitDealer[0][0][0];
-            String[] namePlayers = {"YOU", "dealer"};
-            int[][] dataPlayers={{0, scorePlayer},{1, scoreDealer}};
-            displayWinner(namePlayers, dataPlayers);
+            scoreDealer = hitDealer[0][0][0];
+        }
+
+        String[] namePlayers = {"YOU", "dealer"};
+        int[][] dataPlayers={{0, scorePlayer},{1, scoreDealer}};
+        displayWinner(namePlayers, dataPlayers);
+    }
+
+    public static void blackJackGame(){
+        int[][][] cardsSplit = CardsSplit();
+        int[][] cardsForPlaying = cardsSplit[0];
+        int[][][] collections = initialGame(cardsForPlaying);
+        if(collections.length == 4){
+            hitPlayerSplited(collections[0], collections[1], collections[2], collections[3]);
+        }
+        else {
+            hitPlayerNoneSplited(collections[0], collections[1], collections[2]);
         }
     }
+
 
 }
